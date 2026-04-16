@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Category Specialist — Directs · Value Proposition</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0B0F1A; --bg-card:#131829; --bg-deep:#080B14;
+    --teal:#2DD4BF; --teal-dim:rgba(45,212,191,.12); --teal-mid:rgba(45,212,191,.25);
+    --amber:#F5B400; --amber-dim:rgba(245,180,0,.15);
+    --white:#F1F5F9; --muted:#64748B; --muted-light:#94A3B8;
+    --border:rgba(255,255,255,.06); --border-strong:rgba(255,255,255,.12);
+    --border-teal:rgba(45,212,191,.3); --border-amber:rgba(245,180,0,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white);overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased;}
+
+  .sidebar{position:fixed;left:0;top:0;bottom:0;width:230px;background:rgba(8,11,20,.96);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:2rem 0;z-index:100;}
+  .sidebar-logo{padding:0 1.4rem;font-family:'DM Serif Display',serif;font-size:.95rem;color:var(--teal);margin-bottom:.25rem;line-height:1.25;}
+  .sidebar-sub{padding:0 1.4rem;font-size:.58rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2rem;}
+  .sidebar-label{padding:0 1.4rem;font-size:.55rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.8rem;}
+  .sidebar-chapters{list-style:none;display:flex;flex-direction:column;gap:2px;flex:1;}
+  .sidebar-chapters li{padding:.6rem 1.4rem;font-size:.72rem;color:var(--muted-light);cursor:pointer;transition:all .2s;border-left:2px solid transparent;display:flex;align-items:center;gap:.6rem;}
+  .sidebar-chapters li:hover{color:var(--white);background:rgba(255,255,255,.03);}
+  .sidebar-chapters li.active{color:var(--teal);border-left-color:var(--teal);background:var(--teal-dim);font-weight:500;}
+  .sidebar-chapters li .ch-num{font-size:.55rem;font-weight:700;color:var(--muted);min-width:14px;}
+  .sidebar-chapters li.active .ch-num{color:var(--teal);}
+  .sidebar-footer{padding:1rem 1.4rem;border-top:1px solid var(--border);font-size:.58rem;color:var(--muted);}
+
+  .main{margin-left:230px;height:100vh;position:relative;overflow:hidden;}
+  .counter{position:fixed;top:1.2rem;right:1.5rem;font-size:.7rem;color:var(--muted);z-index:90;font-weight:500;font-variant-numeric:tabular-nums;}
+  .nav-arrows{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;gap:.5rem;z-index:90;}
+  .nav-arrows button{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--muted-light);font-size:.9rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+  .nav-arrows button:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);}
+
+  .slide{position:absolute;inset:0;padding:2.8rem 3.5rem 4.5rem;display:flex;flex-direction:column;opacity:0;transform:translateY(20px);transition:opacity .45s ease, transform .45s ease;pointer-events:none;overflow:hidden;}
+  .slide.active{opacity:1;transform:translateY(0);pointer-events:auto;}
+  .slide-label{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.16em;color:var(--teal);margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+  .slide-label::before{content:'';width:18px;height:1px;background:var(--teal);display:inline-block;}
+  .slide h1{font-family:'DM Serif Display',serif;font-size:2.3rem;line-height:1.15;font-weight:400;max-width:780px;margin-bottom:.7rem;}
+  .slide h2{font-family:'DM Serif Display',serif;font-size:1.8rem;line-height:1.2;font-weight:400;max-width:720px;margin-bottom:.6rem;}
+  .slide .desc{font-size:.82rem;color:var(--muted-light);max-width:640px;line-height:1.6;font-weight:300;margin-bottom:1.4rem;}
+
+  /* TBC pill — cautious forward-looking marker */
+  .tbc{
+    display:inline-flex;align-items:center;
+    font-size:.48rem;font-weight:600;
+    color:var(--muted);background:rgba(255,255,255,.04);
+    padding:.12rem .32rem;border-radius:3px;
+    letter-spacing:.1em;
+    margin-left:.35rem;vertical-align:middle;
+    border:1px solid var(--border);
+    font-family:'DM Sans',sans-serif;
+    text-transform:uppercase;
+  }
+
+  @keyframes pulse{0%,100%{opacity:.4;transform:scale(1);}50%{opacity:.8;transform:scale(1.08);}}
+
+  /* ───────── SLIDE 1 — FIELD & INTELLIGENCE ───────── */
+  .field-wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:1.4rem;margin-top:.3rem;}
+  .field-loop{position:relative;height:340px;background:var(--bg-deep);border:1px solid var(--border);border-radius:12px;padding:1rem;}
+  .field-stage{position:absolute;background:var(--bg-card);border:1px solid var(--border-teal);border-radius:10px;padding:.7rem .85rem;width:170px;z-index:2;}
+  .field-stage-label{font-size:.5rem;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.2rem;}
+  .field-stage-title{font-size:.68rem;font-weight:600;color:var(--white);margin-bottom:.2rem;line-height:1.25;}
+  .field-stage-desc{font-size:.53rem;color:var(--muted-light);font-weight:300;line-height:1.4;}
+  .field-stage.s1{top:.8rem;left:.8rem;} .field-stage.s2{top:.8rem;right:.8rem;}
+  .field-stage.s3{bottom:.8rem;right:.8rem;} .field-stage.s4{bottom:.8rem;left:.8rem;}
+  .field-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;background:radial-gradient(circle at center, var(--teal-dim) 0%, var(--bg-deep) 70%);border:2px solid var(--teal);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;}
+  .field-center-icon{margin-bottom:.25rem;}
+  .field-center-icon svg{width:20px;height:20px;stroke:var(--teal);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+  .field-center-label{font-size:.55rem;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;text-align:center;line-height:1.25;}
+  .field-arrow-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+  .field-arrow-svg path{stroke:var(--teal-mid);stroke-width:1.2;fill:none;stroke-dasharray:4 3;}
+  .field-right{display:flex;flex-direction:column;gap:.5rem;}
+  .field-metric{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:.7rem .85rem;display:grid;grid-template-columns:1fr auto;gap:.4rem;align-items:center;}
+  .field-metric-label{font-size:.62rem;color:var(--white);font-weight:600;}
+  .field-metric-sub{font-size:.5rem;color:var(--muted);font-weight:300;grid-column:1 / -1;margin-top:.1rem;line-height:1.4;}
+  .field-metric-val{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--teal);line-height:1;white-space:nowrap;}
+  .field-metric-val .unit{font-family:'DM Sans', sans-serif;font-size:.52rem;color:var(--muted);font-weight:500;margin-left:.15rem;}
+
+  /* ───────── SLIDE 2 — STRATEGIC INITIATIVES ───────── */
+  .init-wrap{display:grid;grid-template-columns:1.6fr 1fr;gap:1rem;margin-top:.5rem;}
+  .hero-card{background:linear-gradient(135deg, rgba(245,180,0,.08) 0%, var(--bg-card) 45%);border:1px solid var(--border-amber);border-radius:12px;padding:1.2rem 1.3rem;position:relative;overflow:hidden;}
+  .hero-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle, var(--amber-dim) 0%, transparent 70%);border-radius:50%;}
+  .hero-tag{display:inline-flex;align-items:center;gap:.4rem;background:var(--amber-dim);border:1px solid var(--border-amber);color:var(--amber);padding:.2rem .55rem;border-radius:4px;font-size:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:.6rem;position:relative;z-index:2;}
+  .hero-tag::before{content:'';width:6px;height:6px;background:var(--amber);border-radius:50%;box-shadow:0 0 6px var(--amber);}
+  .hero-card h3{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;color:var(--white);margin-bottom:.4rem;line-height:1.15;position:relative;z-index:2;}
+  .hero-card .hero-desc{font-size:.66rem;color:var(--muted-light);font-weight:300;line-height:1.55;max-width:460px;margin-bottom:.9rem;position:relative;z-index:2;}
+  .hero-markets{display:grid;grid-template-columns:repeat(4, 1fr);gap:.45rem;margin-bottom:.9rem;position:relative;z-index:2;}
+  .market-chip{background:var(--bg-deep);border:1px solid var(--border);border-radius:6px;padding:.5rem .4rem;text-align:center;}
+  .market-chip.hot{border-color:var(--amber);background:var(--amber-dim);}
+  .market-name{font-size:.58rem;font-weight:700;color:var(--white);}
+  .market-chip.hot .market-name{color:var(--amber);}
+  .market-sub{font-size:.46rem;color:var(--muted);font-weight:400;margin-top:.1rem;letter-spacing:.02em;}
+
+  .hero-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;padding-top:.7rem;border-top:1px solid var(--border);position:relative;z-index:2;}
+  .hero-metric{text-align:left;}
+  .hero-metric-val{font-family:'DM Serif Display',serif;font-size:1.35rem;color:var(--amber);line-height:1;white-space:nowrap;}
+  .hero-metric-val .unit{font-family:'DM Sans',sans-serif;font-size:.55rem;color:var(--muted);margin-left:.15rem;font-weight:500;}
+  .hero-metric-label{font-size:.5rem;color:var(--muted-light);font-weight:500;margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em;}
+
+  .support-col{display:flex;flex-direction:column;gap:.5rem;}
+  .support-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;transition:border-color .2s;}
+  .support-card:hover{border-color:var(--border-teal);}
+  .support-card h4{font-size:.72rem;font-weight:600;color:var(--white);margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem;}
+  .support-card h4::before{content:'';width:4px;height:4px;background:var(--teal);border-radius:50%;}
+  .support-card p{font-size:.6rem;color:var(--muted-light);font-weight:300;line-height:1.5;margin-bottom:.5rem;}
+  .support-metric{display:flex;gap:.6rem;align-items:baseline;padding-top:.4rem;border-top:1px dashed var(--border);}
+  .support-metric .val{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--teal);}
+  .support-metric .lbl{font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+
+  /* ───────── SLIDE 3 — ORCHESTRATION (no guardrail) ───────── */
+  .orch-wrap{display:grid;grid-template-columns:1.15fr 1fr;gap:1.6rem;align-items:center;margin-top:.3rem;}
+  .orch-diagram{position:relative;height:320px;background:var(--bg-deep);border:1px solid var(--border);border-radius:12px;padding:1rem;overflow:hidden;}
+  .orch-lane{position:absolute;left:1rem;right:8.5rem;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 .8rem;border-radius:6px;font-size:.6rem;font-weight:600;background:rgba(255,255,255,.02);border:1px solid var(--border);color:var(--muted-light);}
+  .orch-lane.l1{top:1rem;} .orch-lane.l2{top:4rem;} .orch-lane.l3{top:7rem;}
+  .orch-lane-label{font-size:.58rem;letter-spacing:.04em;}
+  .orch-lane-tag{font-size:.5rem;color:var(--muted);padding:.15rem .45rem;border:1px solid var(--border);border-radius:4px;font-weight:500;}
+  .orch-global{position:absolute;top:10.5rem;left:1rem;right:1rem;height:60px;background:linear-gradient(90deg, var(--teal-dim), rgba(45,212,191,.05));border:1px solid var(--border-teal);border-radius:8px;display:flex;align-items:center;padding:0 1rem;gap:.7rem;}
+  .orch-global-label{font-size:.62rem;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;}
+  .orch-global-sub{font-size:.55rem;color:var(--muted-light);font-weight:300;line-height:1.4;margin-top:.15rem;}
+  .orch-hot{position:absolute;width:30px;height:30px;background:var(--bg-card);border:1.5px solid var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:var(--amber);box-shadow:0 0 12px var(--amber-dim);z-index:3;}
+  .orch-hot::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px dashed var(--border-amber);animation:pulse 3s ease-in-out infinite;}
+  .orch-hot.h1{top:1.4rem;right:9rem;} .orch-hot.h2{top:4.4rem;right:11rem;} .orch-hot.h3{top:7.4rem;right:9.5rem;}
+  .orch-topics{position:absolute;right:1rem;top:1rem;bottom:1rem;width:7rem;display:flex;flex-direction:column;gap:.35rem;}
+  .orch-topic{background:var(--bg-card);border:1px solid var(--border-amber);border-radius:6px;padding:.35rem .5rem;font-size:.52rem;color:var(--white);font-weight:500;}
+  .orch-topic-sub{font-size:.45rem;color:var(--muted);font-weight:300;margin-top:.1rem;}
+  .orch-list{display:flex;flex-direction:column;gap:.5rem;}
+  .orch-item{display:flex;gap:.7rem;padding:.7rem .85rem;background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:8px;}
+  .orch-item-icon{width:28px;height:28px;background:var(--teal-dim);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .orch-item-icon svg{width:14px;height:14px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .orch-item-body h4{font-size:.72rem;font-weight:600;margin-bottom:.1rem;}
+  .orch-item-body p{font-size:.6rem;color:var(--muted-light);font-weight:300;line-height:1.45;}
+
+  /* ───────── SLIDE 4 — VISION & SYNERGY (UNIFIED) ───────── */
+  .unified-wrap{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2rem;
+    margin-top:.3rem;
+    align-items:stretch;
+  }
+  .unified-side{
+    display:flex;flex-direction:column;
+    background:var(--bg-deep);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:1.1rem 1.2rem;
+  }
+  .unified-head{
+    font-size:.55rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--teal);
+    margin-bottom:.2rem;
+  }
+  .unified-subhead{
+    font-family:'DM Serif Display',serif;
+    font-size:1.05rem;
+    color:var(--white);
+    margin-bottom:.85rem;
+    line-height:1.2;
+  }
+
+  /* LEFT: principle diagram */
+  .princ-stack{display:flex;flex-direction:column;gap:.35rem;}
+  .princ-row{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:.35rem;
+  }
+  .princ-bu{
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-top:2px solid var(--muted-light);
+    border-radius:6px;
+    padding:.45rem .5rem;
+    text-align:center;
+  }
+  .princ-bu:nth-child(1){border-top-color:#60A5FA;}
+  .princ-bu:nth-child(2){border-top-color:#A78BFA;}
+  .princ-bu:nth-child(3){border-top-color:#F472B6;}
+  .princ-bu-name{font-size:.55rem;font-weight:700;color:var(--white);letter-spacing:.04em;}
+  .princ-bu-cap{font-size:.5rem;color:var(--muted-light);font-weight:300;line-height:1.35;margin-top:.15rem;}
+  .princ-connector{
+    display:flex;justify-content:center;
+    color:var(--teal);font-size:.85rem;
+    padding:.1rem 0;
+    opacity:.7;
+  }
+  .princ-hub{
+    background:linear-gradient(135deg, var(--teal-dim), transparent);
+    border:1px solid var(--border-teal);
+    border-radius:8px;
+    padding:.6rem .8rem;
+    text-align:center;
+  }
+  .princ-hub-label{
+    font-size:.6rem;font-weight:700;
+    color:var(--teal);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
+  .princ-hub-sub{font-size:.52rem;color:var(--muted-light);font-weight:300;margin-top:.1rem;}
+  .princ-outputs{
+    display:grid;grid-template-columns:repeat(2,1fr);
+    gap:.35rem;
+  }
+  .princ-out{
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:.4rem .55rem;
+    display:flex;align-items:center;gap:.4rem;
+  }
+  .princ-out-dot{
+    width:5px;height:5px;border-radius:50%;
+    background:var(--teal);flex-shrink:0;
+  }
+  .princ-out-label{font-size:.55rem;font-weight:600;color:var(--white);}
+
+  /* RIGHT: evidence matrix (compact) */
+  .ev-matrix{
+    display:grid;
+    grid-template-columns:100px repeat(3, 1fr) 80px;
+    gap:0;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:8px;
+    overflow:hidden;
+    flex:1;
+  }
+  .ev-cell{
+    padding:.4rem .45rem;
+    font-size:.55rem;
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;
+  }
+  .ev-corner{color:var(--muted);font-size:.5rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+  .ev-bu-head{justify-content:center;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.5rem;}
+  .ev-bu-head.b1{color:#60A5FA;} .ev-bu-head.b2{color:#A78BFA;} .ev-bu-head.b3{color:#F472B6;}
+  .ev-lead-head{color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.5rem;justify-content:center;border-left:1px dashed var(--border-strong);}
+  .ev-cat{font-weight:600;color:var(--white);font-size:.58rem;border-right:1px solid var(--border);}
+  .ev-dot{justify-content:center;}
+  .ev-dot span{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--border-strong);
+  }
+  .ev-dot span.on{background:var(--teal);}
+  .ev-dot span.strong{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+  .ev-lead{justify-content:center;font-size:.55rem;font-weight:700;color:var(--amber);border-left:1px dashed var(--border-strong);}
+  .ev-row{display:contents;}
+  .ev-matrix > .ev-row:last-child .ev-cell{border-bottom:none;}
+
+  .ev-legend{
+    display:flex;gap:.9rem;justify-content:flex-end;
+    margin-top:.55rem;font-size:.5rem;color:var(--muted);
+  }
+  .ev-legend-item{display:flex;align-items:center;gap:.25rem;}
+  .ev-legend-dot{width:6px;height:6px;border-radius:50%;}
+  .ev-legend-dot.off{background:var(--border-strong);}
+  .ev-legend-dot.on{background:var(--teal);}
+  .ev-legend-dot.strong{background:var(--amber);box-shadow:0 0 4px var(--amber);}
+
+  .unified-rule{
+    margin-top:.7rem;
+    padding:.55rem .75rem;
+    background:var(--teal-dim);
+    border:1px solid var(--border-teal);
+    border-radius:6px;
+    font-size:.58rem;
+    color:var(--muted-light);
+    line-height:1.5;
+    font-weight:300;
+  }
+  .unified-rule strong{color:var(--teal);font-weight:700;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;margin-right:.35rem;}
+
+  @media (max-width:1100px){
+    .field-wrap,.init-wrap,.orch-wrap,.unified-wrap{grid-template-columns:1fr;}
+    .slide h1{font-size:1.9rem;} .slide h2{font-size:1.45rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">Category Specialist<br>Directs</div>
+  <div class="sidebar-sub">Value Proposition</div>
+  <div class="sidebar-label">Chapters</div>
+  <ul class="sidebar-chapters">
+    <li class="active" onclick="goSlide(0)"><span class="ch-num">01</span>Field &amp; Intelligence</li>
+    <li onclick="goSlide(1)"><span class="ch-num">02</span>Strategic Initiatives</li>
+    <li onclick="goSlide(2)"><span class="ch-num">03</span>Orchestration</li>
+    <li onclick="goSlide(3)"><span class="ch-num">04</span>Vision &amp; Synergy</li>
+  </ul>
+  <div class="sidebar-footer">Confidential · Category · Directs</div>
+</div>
+
+<div class="counter" id="counter">1 / 4</div>
+
+<div class="nav-arrows">
+  <button onclick="prev()">&#8592;</button>
+  <button onclick="next()">&#8594;</button>
+</div>
+
+<div class="main">
+
+  <!-- ═══ SLIDE 1 — FIELD & INTELLIGENCE ═══ -->
+  <div class="slide active">
+    <div class="slide-label">Chapter 01 &mdash; Execution Model</div>
+    <h1>Intelligence-Led Field Execution</h1>
+    <p class="desc">Value is not built from dashboards alone. A Category Specialist for Directs commits to the field &mdash; walking operations, sitting with users, visiting supplier plants &mdash; and uses external market intelligence and AI tools to convert those relationships into leverage.</p>
+
+    <div class="field-wrap">
+      <div class="field-loop">
+        <svg class="field-arrow-svg" viewBox="0 0 500 320" preserveAspectRatio="none">
+          <path d="M 140 55 Q 250 25 360 55" />
+          <path d="M 420 100 Q 450 160 420 220" />
+          <path d="M 360 265 Q 250 295 140 265" />
+          <path d="M 80 220 Q 50 160 80 100" />
+        </svg>
+        <div class="field-center">
+          <div class="field-center-icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9"/><polyline points="21 3 21 9 15 9"/><path d="M12 7v5l3 3"/></svg></div>
+          <div class="field-center-label">Value<br>Loop</div>
+        </div>
+        <div class="field-stage s1"><div class="field-stage-label">&#9312; Users</div><div class="field-stage-title">On-site with operations</div><div class="field-stage-desc">Understand the real requirements behind the specs &mdash; availability, safety, total lifecycle.</div></div>
+        <div class="field-stage s2"><div class="field-stage-label">&#9313; Suppliers</div><div class="field-stage-title">At the plant, not the portal</div><div class="field-stage-desc">Build trust with key suppliers where work actually happens. Visit, inspect, negotiate face-to-face.</div></div>
+        <div class="field-stage s3"><div class="field-stage-label">&#9314; Intelligence</div><div class="field-stage-title">Market data &amp; AI leverage</div><div class="field-stage-desc">External databases, benchmarks, and AI-accelerated analysis to arrive prepared &mdash; not to replace judgment.</div></div>
+        <div class="field-stage s4"><div class="field-stage-label">&#9315; Value Captured</div><div class="field-stage-title">Contracts that hold up</div><div class="field-stage-desc">Better commercial terms, realistic performance KPIs, fewer disputes in execution.</div></div>
+      </div>
+
+      <div class="field-right">
+        <div class="field-metric">
+          <div class="field-metric-label">Days in the field</div>
+          <div class="field-metric-val">30<span class="unit">% time</span><span class="tbc">TBC</span></div>
+          <div class="field-metric-sub">Commitment, not an afterthought. Site visits, supplier plants, operations reviews.</div>
+        </div>
+        <div class="field-metric">
+          <div class="field-metric-label">Supplier touchpoints</div>
+          <div class="field-metric-val">Top 10<span class="unit">quarterly</span><span class="tbc">TBC</span></div>
+          <div class="field-metric-sub">Structured engagement with strategic suppliers &mdash; governance plus relationship.</div>
+        </div>
+        <div class="field-metric">
+          <div class="field-metric-label">Doc &amp; analysis time saved</div>
+          <div class="field-metric-val">40<span class="unit">% reduction</span><span class="tbc">TBC</span></div>
+          <div class="field-metric-sub">AI-accelerated tender packages, TCO models, and business cases free hours for the field.</div>
+        </div>
+        <div class="field-metric">
+          <div class="field-metric-label">Intelligence sources</div>
+          <div class="field-metric-val">4+<span class="unit">integrated</span><span class="tbc">TBC</span></div>
+          <div class="field-metric-sub">Market DBs, OEM price trackers, cost indices, benchmark networks &mdash; synthesized, not just subscribed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 2 — STRATEGIC INITIATIVES ═══ -->
+  <div class="slide">
+    <div class="slide-label">Chapter 02 &mdash; Signature Plays</div>
+    <h2>Strategic Initiatives Pipeline</h2>
+    <p class="desc">Structural plays with measurable impact. One flagship initiative leads the pipeline &mdash; supported by two governance plays that multiply its effect across the Directs portfolio.</p>
+
+    <div class="init-wrap">
+      <div class="hero-card">
+        <div class="hero-tag">Flagship Initiative</div>
+        <h3>Global Sourcing of OEM Alternatives &middot; China-Led</h3>
+        <p class="hero-desc">Unlock meaningful cost advantage on equipment, components, and aftermarket by qualifying OEM alternatives from competitive manufacturing markets &mdash; led by China, extended to Turkey, India, and Eastern Europe &mdash; while safeguarding safety, quality, and lifecycle performance.</p>
+
+        <div class="hero-markets">
+          <div class="market-chip hot"><div class="market-name">China</div><div class="market-sub">Flagship market</div></div>
+          <div class="market-chip"><div class="market-name">Turkey</div><div class="market-sub">Europe-adjacent</div></div>
+          <div class="market-chip"><div class="market-name">India</div><div class="market-sub">Engineered scale</div></div>
+          <div class="market-chip"><div class="market-name">E. Europe</div><div class="market-sub">EU-compliant</div></div>
+        </div>
+
+        <div class="hero-metrics">
+          <div class="hero-metric">
+            <div class="hero-metric-val">15&ndash;30<span class="unit">%</span><span class="tbc">TBC</span></div>
+            <div class="hero-metric-label">TCO reduction target</div>
+          </div>
+          <div class="hero-metric">
+            <div class="hero-metric-val">6&ndash;9<span class="unit">mo</span><span class="tbc">TBC</span></div>
+            <div class="hero-metric-label">Qualification cycle</div>
+          </div>
+          <div class="hero-metric">
+            <div class="hero-metric-val">3<span class="unit">waves</span><span class="tbc">TBC</span></div>
+            <div class="hero-metric-label">Category rollout</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="support-col">
+        <div class="support-card">
+          <h4>Supplier Management Reorganization</h4>
+          <p>Segment the base. Build tiered governance. Clear accountability from day-to-day performance through executive escalation.</p>
+          <div class="support-metric"><span class="val">Tier 1&ndash;3</span><span class="lbl">Segmentation</span></div>
+        </div>
+        <div class="support-card">
+          <h4>Contractor Performance Management</h4>
+          <p>KPI frameworks &middot; incentive/penalty mechanisms &middot; availability-based models. Turn contractor performance from argument into data.</p>
+          <div class="support-metric"><span class="val">SLA + Bonus</span><span class="lbl">Model</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 3 — ORCHESTRATION (guardrail removed) ═══ -->
+  <div class="slide">
+    <div class="slide-label">Chapter 03 &mdash; Approach</div>
+    <h2>Orchestrating Hot Topics Across BUs</h2>
+    <p class="desc">Local category teams own their procedures. Knowledge teams own their expertise. The global specialist replaces neither &mdash; it integrates. The value is in orchestration: identifying the hot topics that cross BU boundaries and coordinating a single response.</p>
+
+    <div class="orch-wrap">
+      <div class="orch-diagram">
+        <div class="orch-lane l1"><span class="orch-lane-label">Local BU Procedures</span><span class="orch-lane-tag">Untouched</span></div>
+        <div class="orch-lane l2"><span class="orch-lane-label">Local Category Teams</span><span class="orch-lane-tag">Empowered</span></div>
+        <div class="orch-lane l3"><span class="orch-lane-label">Knowledge &amp; Technical Teams</span><span class="orch-lane-tag">Leveraged</span></div>
+        <div class="orch-hot h1">&#9670;</div>
+        <div class="orch-hot h2">&#9670;</div>
+        <div class="orch-hot h3">&#9670;</div>
+        <div class="orch-global">
+          <div>
+            <div class="orch-global-label">Global Expertise Layer</div>
+            <div class="orch-global-sub">Connects hot topics across lanes &middot; does not own them</div>
+          </div>
+        </div>
+        <div class="orch-topics">
+          <div class="orch-topic">GFA Renegotiation<div class="orch-topic-sub">cross-BU trigger</div></div>
+          <div class="orch-topic">Supplier Failure<div class="orch-topic-sub">risk containment</div></div>
+          <div class="orch-topic">Spec Harmonization<div class="orch-topic-sub">TCO unlock</div></div>
+          <div class="orch-topic">Inclusive Procurement<div class="orch-topic-sub">community value</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="orch-list">
+          <div class="orch-item">
+            <div class="orch-item-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <div class="orch-item-body"><h4>Identify Hot Topics</h4><p>Listen across BUs. Spot the 5&ndash;7 issues per quarter that deserve coordinated treatment vs. local handling.</p></div>
+          </div>
+          <div class="orch-item">
+            <div class="orch-item-icon"><svg viewBox="0 0 24 24"><path d="M20 7h-7M20 12h-7M20 17h-7"/><path d="M4 7l2 2 3-4"/><path d="M4 14l2 2 3-4"/></svg></div>
+            <div class="orch-item-body"><h4>Integrate, Don't Replace</h4><p>Plug category procedures into existing BU workflows. The specialist amplifies local teams; it does not absorb them.</p></div>
+          </div>
+          <div class="orch-item">
+            <div class="orch-item-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="orch-item-body"><h4>Conduct the Response</h4><p>Orchestrate timing, priority, and ownership across lanes &mdash; same sheet of music, different instruments.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 4 — VISION & SYNERGY (UNIFIED) ═══ -->
+  <div class="slide">
+    <div class="slide-label">Chapter 04 &mdash; Horizon</div>
+    <h2>Securing Value &middot; Best of Every BU</h2>
+    <p class="desc">A Category Specialist for Directs acts as a synthesis layer: taking the strongest capability of each incoming Business Unit and translating it into a single sourcing position. The principle on the left. The evidence on the right.</p>
+
+    <div class="unified-wrap">
+
+      <!-- LEFT: The Principle -->
+      <div class="unified-side">
+        <div class="unified-head">The Principle</div>
+        <div class="unified-subhead">From three BUs, one position.</div>
+
+        <div class="princ-stack">
+          <div class="princ-row">
+            <div class="princ-bu"><div class="princ-bu-name">BU 1</div><div class="princ-bu-cap">Equipment negotiation &middot; OEM partnerships</div></div>
+            <div class="princ-bu"><div class="princ-bu-name">BU 2</div><div class="princ-bu-cap">Services &amp; contractor performance</div></div>
+            <div class="princ-bu"><div class="princ-bu-name">BU 3</div><div class="princ-bu-cap">Regional sourcing &middot; playbooks</div></div>
+          </div>
+          <div class="princ-connector">&#9662;</div>
+          <div class="princ-hub">
+            <div class="princ-hub-label">Category Synthesis Layer</div>
+            <div class="princ-hub-sub">Lift · Translate · Scale</div>
+          </div>
+          <div class="princ-connector">&#9662;</div>
+          <div class="princ-outputs">
+            <div class="princ-out"><span class="princ-out-dot"></span><span class="princ-out-label">Savings Realized</span></div>
+            <div class="princ-out"><span class="princ-out-dot"></span><span class="princ-out-label">Risk Mitigation</span></div>
+            <div class="princ-out"><span class="princ-out-dot"></span><span class="princ-out-label">Cycle Time</span></div>
+            <div class="princ-out"><span class="princ-out-dot"></span><span class="princ-out-label">Supplier Value</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: The Evidence -->
+      <div class="unified-side">
+        <div class="unified-head">The Evidence</div>
+        <div class="unified-subhead">Which BU leads which sub-category.</div>
+
+        <div class="ev-matrix">
+          <div class="ev-row">
+            <div class="ev-cell ev-corner">Sub-Category</div>
+            <div class="ev-cell ev-bu-head b1">BU 1</div>
+            <div class="ev-cell ev-bu-head b2">BU 2</div>
+            <div class="ev-cell ev-bu-head b3">BU 3</div>
+            <div class="ev-cell ev-lead-head">Lead</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-cell ev-cat">Mobile Equipment</div>
+            <div class="ev-cell ev-dot"><span class="strong"></span></div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-lead">BU 1</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-cell ev-cat">Fixed Plant &amp; Mills</div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-dot"><span class="strong"></span></div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-lead">BU 2</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-cell ev-cat">Tyres &amp; GET</div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-dot"><span class="strong"></span></div>
+            <div class="ev-cell ev-lead">BU 3</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-cell ev-cat">Power &amp; Automation</div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-dot"><span class="strong"></span></div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-lead">BU 2</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-cell ev-cat">Aftermarket &amp; Spares</div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-dot"><span class="on"></span></div>
+            <div class="ev-cell ev-dot"><span class="strong"></span></div>
+            <div class="ev-cell ev-lead">BU 3</div>
+          </div>
+        </div>
+
+        <div class="ev-legend">
+          <div class="ev-legend-item"><span class="ev-legend-dot off"></span>Developing</div>
+          <div class="ev-legend-item"><span class="ev-legend-dot on"></span>Mature</div>
+          <div class="ev-legend-item"><span class="ev-legend-dot strong"></span>Lead BU</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="unified-rule">
+      <strong>Synergy Rule</strong>Every sub-category has one Lead BU. The specialist lifts that playbook, translates it across contexts, and turns three separate operations into one sourcing position.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const chapters = document.querySelectorAll('.sidebar-chapters li');
+  const counter = document.getElementById('counter');
+  const total = slides.length;
+
+  function goSlide(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    chapters[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    chapters[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+  function next() { goSlide(current + 1); }
+  function prev() { goSlide(current - 1); }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+  });
+</script>
+
+</body>
+</html>
